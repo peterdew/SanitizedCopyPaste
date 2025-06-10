@@ -3,29 +3,28 @@
 ; IP address counter for consistent anonymization
 global ipCounter := 1
 global domainCounter := 1
+; translations als array van arrays
+translations := [
+    ["bedrijf1", "[BEDRIJF]"],
+    ["bedrijf2", "[ORGANISATIE]"],
+    ["naam1", "[NAAM]"],
+    ["naam2", "[PERSOON]"]
+]
 
-translations := Map(
-    "bedrijf1" => "[BEDRIJF]",
-    "bedrijf2" => "[ORGANISATIE]",
-    "naam1" => "[NAAM]",
-    "naam2" => "[PERSOON]"
-    ; Add more translations here
-)
-
-; HTTP headers that should be anonymized
-httpHeaders := Map(
-    "x-forwarded-for" => true,
-    "host" => true,
-    "origin" => true,
-    "user-agent" => true,
-    "referer" => true,
-    "set-cookie" => true,
-    "cookie" => true,
-    "authorization" => true,
-    "x-api-key" => true,
-    "api-key" => true,
-    "bearer" => true
-)
+; httpHeaders als gewone array
+httpHeaders := [
+    "x-forwarded-for",
+    "host",
+    "origin",
+    "user-agent",
+    "referer",
+    "set-cookie",
+    "cookie",
+    "authorization",
+    "x-api-key",
+    "api-key",
+    "bearer"
+]
 
 ; Function to sanitize IP addresses while preserving structure
 SanitizeIP(text) {
@@ -59,7 +58,7 @@ SanitizeHeaders(text) {
     result := text
     
     ; Process each header type
-    for header, _ in httpHeaders {
+    for index, header in httpHeaders {
         switch header {
             case "set-cookie":
                 ; Preserve cookie structure but anonymize values
@@ -88,7 +87,7 @@ SanitizeHeaders(text) {
             
             default:
                 ; For other headers, preserve structure but anonymize value
-                result := RegExReplace(result, "i)" . header . ":\s*([^\r\n]*)", 
+                result := RegExReplace(result, "i" . header . ":\s*([^\r\n]*)", 
                     header . ": SanitizedValue")
         }
     }
@@ -101,8 +100,8 @@ SanitizeText(text) {
     result := text
     
     ; Apply basic translations
-    for original, replacement in translations {
-        result := StrReplace(result, original, replacement)
+    for index, pair in translations {
+        result := StrReplace(result, pair[1], pair[2])
     }
     
     ; Apply IP address sanitization
@@ -120,8 +119,8 @@ SanitizeText(text) {
 ; Function to desanitize text (replace labels back to original text)
 DesanitizeText(text) {
     result := text
-    for original, replacement in translations {
-        result := StrReplace(result, replacement, original)
+    for index, pair in translations {
+        result := StrReplace(result, pair[2], pair[1])
     }
     return result
 }
