@@ -3,12 +3,13 @@
 ; IP address counter for consistent anonymization
 global ipCounter := 1
 global domainCounter := 1
+global stringCounter := 1  ; Counter for manual string additions
 ; translations als array van arrays
 translations := [
-    ["bedrijf1", "[BEDRIJF]"],
-    ["bedrijf2", "[ORGANISATIE]"],
-    ["naam1", "[NAAM]"],
-    ["naam2", "[PERSOON]"]
+    ["microsoft", "[BEDR_mcs]"],
+    ["The Hacker Next Door", "[BEDR_THN]"],
+    ["Alex van der Meer", "[NAME_AM]"],
+    ["John Knox", "[Name_JK]"]
 ]
 
 ; httpHeaders als gewone array
@@ -95,6 +96,15 @@ SanitizeHeaders(text) {
     return result
 }
 
+; Function to add a new string to translations
+AddStringToMemory(text) {
+    global stringCounter
+    sanitizedText := "[STRING" . stringCounter . "]"
+    translations.Push([text, sanitizedText])
+    stringCounter++
+    return sanitizedText
+}
+
 ; Function to sanitize text (replace original text with labels)
 SanitizeText(text) {
     result := text
@@ -138,4 +148,15 @@ DesanitizeText(text) {
     ClipWait(1)
     A_Clipboard := DesanitizeText(A_Clipboard)
     Send("^v")
+}
+
+^+a:: {  ; Ctrl+Shift+A to add selected text to memory
+    A_Clipboard := ""
+    Send("^c")
+    ClipWait(1)
+    selectedText := A_Clipboard
+    if (selectedText != "") {
+        sanitizedText := AddStringToMemory(selectedText)
+        MsgBox("Added to memory as: " . sanitizedText)
+    }
 }
