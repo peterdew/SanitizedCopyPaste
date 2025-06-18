@@ -10,7 +10,7 @@ Origin: https://internal.clientcorp.com
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Set-Cookie: sessionId=fe9844b5-cad9-445e-bf48-6937fe0105e4684a77; Path=/; HttpOnly; Secure
+Set-Cookie: sessionId=abc123def456; Path=/; HttpOnly; Secure
 X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
 
 {
