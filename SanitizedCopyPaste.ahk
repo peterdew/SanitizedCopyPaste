@@ -4,13 +4,52 @@
 global ipCounter := 1
 global domainCounter := 1
 global stringCounter := 1  ; Counter for manual string additions
-; translations als array van arrays
-translations := [
-    ["microsoft", "[BEDR_mcs]"],
-    ["The Hacker Next Door", "[BEDR_THN]"],
-    ["Alex van der Meer", "[NAME_AM]"],
-    ["John Knox", "[Name_JK]"]
-]
+
+; Load translations from INI file
+global translations := []
+LoadTranslations() {
+    global translations
+    translations := []  ; Clear existing translations
+    
+    ; Read all sections from the INI file
+    iniPath := A_ScriptDir . "\translations.ini"
+    if !FileExist(iniPath) {
+        MsgBox("translations.ini not found!")
+        return
+    }
+    
+    ; Read Companies section
+    Loop Parse, IniRead(iniPath, "Companies"), "`n" {
+        if A_LoopField {
+            key := StrSplit(A_LoopField, "=")[1]
+            value := StrSplit(A_LoopField, "=")[2]
+            translations.Push([key, value])
+        }
+    }
+    
+    ; Read Names section
+    Loop Parse, IniRead(iniPath, "Names"), "`n" {
+        if A_LoopField {
+            key := StrSplit(A_LoopField, "=")[1]
+            value := StrSplit(A_LoopField, "=")[2]
+            translations.Push([key, value])
+        }
+    }
+    
+    ; Read CustomStrings section if it exists
+    try {
+        Loop Parse, IniRead(iniPath, "CustomStrings"), "`n" {
+            if A_LoopField {
+                key := StrSplit(A_LoopField, "=")[1]
+                value := StrSplit(A_LoopField, "=")[2]
+                translations.Push([key, value])
+            }
+        }
+    }
+}
+
+; Load translations when script starts
+LoadTranslations()
 
 ; httpHeaders als gewone array
 httpHeaders := [
@@ -98,9 +137,16 @@ SanitizeHeaders(text) {
 
 ; Function to add a new string to translations
 AddStringToMemory(text) {
-    global stringCounter
+    global stringCounter, translations
     sanitizedText := "[STRING" . stringCounter . "]"
+    
+    ; Add to translations array
     translations.Push([text, sanitizedText])
+    
+    ; Add to INI file in CustomStrings section
+    iniPath := A_ScriptDir . "\translations.ini"
+    IniWrite(sanitizedText, iniPath, "CustomStrings", text)
+    
     stringCounter++
     return sanitizedText
 }
