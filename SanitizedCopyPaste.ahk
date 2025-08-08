@@ -106,7 +106,7 @@ SanitizeText(text) {
         }
         
         ; Match Base64-like tokens (at least 20 chars, typical for JWT/API keys)
-        if RegExMatch(line, "([a-zA-Z0-9+/=]{20,})", &match) {
+        if RegExMatch(line, "([a-zA-Z0-9+/=_-]{20,})", &match) {
             sanitized := "..." . GetLast6Chars(match[1])
             result := StrReplace(result, match[1], sanitized)
         }
