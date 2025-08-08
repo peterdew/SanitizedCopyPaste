@@ -95,12 +95,32 @@ SanitizeText(text) {
         result := StrReplace(result, pair[1], pair[2])
     }
     
-    ; Look for any long strings that look like tokens (at least 20 chars, typical for JWT/API keys)
+    ; Look for tokens, GUIDs, and API keys
     Loop Parse, result, "`n", "`r" {
         line := A_LoopField
-        if RegExMatch(line, "([a-zA-Z0-9_\-\.]{20,})", &match) {
-            ; Only sanitize if it looks like a token (not a URL)
-            if !RegExMatch(match[1], "i)(http|www|\.com|\.net|\.org|\.nl)") {
+        
+        ; Match GUIDs (8-4-4-4-12 format)
+        if RegExMatch(line, "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})", &match) {
+            sanitized := "..." . GetLast6Chars(match[1])
+            result := StrReplace(result, match[1], sanitized)
+        }
+        
+        ; Match Base64-like tokens (at least 20 chars, typical for JWT/API keys)
+        if RegExMatch(line, "([a-zA-Z0-9+/=]{20,})", &match) {
+            sanitized := "..." . GetLast6Chars(match[1])
+            result := StrReplace(result, match[1], sanitized)
+        }
+        
+        ; Match hex strings (at least 32 chars, typical for API keys/hashes)
+        if RegExMatch(line, "([a-fA-F0-9]{32,})", &match) {
+            sanitized := "..." . GetLast6Chars(match[1])
+            result := StrReplace(result, match[1], sanitized)
+        }
+        
+        ; Match long alphanumeric strings without spaces (likely tokens, but exclude common readable text patterns)
+        if RegExMatch(line, "([a-zA-Z0-9_\-\.]{25,})", &match) {
+            ; Skip if it contains common readable patterns
+            if !RegExMatch(match[1], "i)(Request|interrupted|user|error|warning|info|success|failed|started|stopped|completed|processing)") {
                 sanitized := "..." . GetLast6Chars(match[1])
                 result := StrReplace(result, match[1], sanitized)
             }
