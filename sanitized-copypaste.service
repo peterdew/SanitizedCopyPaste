@@ -7,8 +7,8 @@ Wants=graphical-session.target
 Type=simple
 User=peterdew
 Group=peterdew
-WorkingDirectory=/home/peterdew/repos/SanitizedCopyPaste
-ExecStart=/usr/bin/python3 /home/peterdew/repos/SanitizedCopyPaste/hotkey_daemon.py
+WorkingDirectory=/home/peterdew/repos/SanitizedCopyPaste-clean
+ExecStart=/usr/bin/python3 /home/peterdew/repos/SanitizedCopyPaste-clean/hotkey_daemon.py
 Restart=always
 RestartSec=5
 Environment=DISPLAY=:0
