@@ -1,0 +1,12 @@
+# Python dependencies for SanitizedCopyPaste
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+# Note: xclip/xsel and xdotool are system packages, not Python packages
+# Install them via your package manager:
+# Ubuntu/Debian: sudo apt install xclip xdotool
+# Fedora: sudo dnf install xclip xdotool
+# Arch: sudo pacman -S xclip xdotool
+
+# Optional: For enhanced JSON handling
+# (Python's built-in json module is sufficient, but jq is recommended for shell script)

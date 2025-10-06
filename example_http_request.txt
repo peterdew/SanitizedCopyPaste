@@ -1,0 +1,36 @@
+GET /api/v1/users/12345 HTTP/1.1
+Host: api.clientcorp.nl
+X-Forwarded-For: 192.168.1.100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ
+Cookie: sessionId=abc123def456; userId=789xyz
+X-API-Key: sk_test_FAKE_STRIPE_KEY_FOR_DEMO_PURPOSES_ONLY
+Referer: https://internal.clientcorp.com/dashboard
+Origin: https://internal.clientcorp.com
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Set-Cookie: sessionId=fe9844b5-cad9-445e-bf48-6937fe0105e4684a77; Path=/; HttpOnly; Secure
+X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
+
+{
+    "user": {
+        "id": "12345",
+        "name": "naam1",
+        "email": "john.doe@microsoft.com",
+        "ip_address": "192.168.1.100",
+        "last_login": "2024-03-20T10:30:00Z",
+        "department": "IT",
+        "company": "bedrijf1",
+        "internal_id": "INT-789",
+        "api_endpoints": [
+            "https://api.clientcorp.nl/v1/users",
+            "https://api.clientcorp.nl/v1/orders"
+        ]
+    },
+    "metadata": {
+        "request_id": "550e8400-e29b-41d4-a716-446655440000",
+        "server_ip": "10.0.0.1",
+        "processing_time": "0.023s"
+    }
+} 

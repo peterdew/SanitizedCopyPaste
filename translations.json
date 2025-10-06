@@ -1,0 +1,14 @@
+{
+  "companies": {
+    "microsoft": "[BEDR_mcs]",
+    "The Hacker Next Door": "[BEDR_THN]",
+    "clientcorp": "[BEDR_CC]"
+  },
+  "names": {
+    "Alex van der Meer": "[NAME_AM]",
+    "John Knox": "[Name_JK]"
+  },
+  "custom_strings": {
+    "ef1yfsdajfsk": "[STRING1]"
+  }
+}
